@@ -5,5 +5,5 @@
 }
 .grid-wrap{
     display:grid;
-    grid-template-columns: repeat(50,20px);
+    grid-template-columns: repeat(20,20px);
 }

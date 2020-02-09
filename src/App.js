@@ -1,8 +1,8 @@
 import React, { useState, useCallback,useRef } from 'react';
 import styles from './App.css';
 
-const numRows = 50;
-const numCols = 50;
+const numRows = 20;
+const numCols = 20;
 
 function gridInit(numRows,numCols){
   const Rows = [];
@@ -15,22 +15,14 @@ function gridInit(numRows,numCols){
 //returns number of living neighbours to given cell
 function liveNeighbours(g,i,j){
   let x= 0;
-
-  if(i>0){
-    g[i-1][j-1] ? x+=1 : x=x;
-    g[i-1][j] ? x+=1 : x=x;
-    g[i-1][j+1] ? x+=1: x=x;
-  }
-  if(j>0){
-    g[i][j+1] ? x+=1 : x=x;
-    g[i+1][j] ? x+=1 : x=x;
-    g[i+1][j+1] ? x+=1 : x=x;
-    g[i+1][j-1] ? x+=1 : x=x;
-    g[i][j-1] ? x+=1 : x=x;
-  }
-  
-  
-  
+  g[i-1][j-1] ? x+=1 : x=x;
+  g[i-1][j] ? x+=1 : x=x;
+  g[i-1][j+1] ? x+=1: x=x;
+  g[i][j+1] ? x+=1 : x=x;
+  g[i+1][j] ? x+=1 : x=x;
+  g[i+1][j+1] ? x+=1 : x=x;
+  g[i+1][j-1] ? x+=1 : x=x;
+  g[i][j-1] ? x+=1 : x=x;
   return x;
 }
 
@@ -45,10 +37,9 @@ function App() {
 
   const runningRef = useRef(running);
   runningRef.current = running;
-
+ 
   //simulation recursive function
   const runSimulation = useCallback(()=>{
-    console.log('gridCopy');
     //kill condition
     if(!runningRef.current){
       return ;
@@ -57,10 +48,8 @@ function App() {
       let gridCopy = gridInit(numRows,numCols);
       Object.assign(gridCopy, g);
 
-      
-
-      for(let i = 0; i< numRows ; i++){
-        for(let j = 0; j<numCols ; j++){
+      for(let i = 1; i<= numRows-2 ; i++){
+        for(let j = 1; j<=numCols-2 ; j++){
           //cell life logic
           if(grid[i][j]){
             if(liveNeighbours(grid,i,j) <2 || liveNeighbours(grid,i,j) >3){
@@ -75,6 +64,7 @@ function App() {
         }
       }
       g = gridCopy;
+      return g;
     })
 
     setTimeout(runSimulation,750);
@@ -83,7 +73,7 @@ function App() {
   return (
     <>
     <button onClick={()=>{
-      running ? runSimulation() : setRunning(!running);
+      running? runSimulation() : setRunning(!running)
     }}>{running ? "stop": "start"}</button>
 
      <button onClick={()=>{
@@ -103,7 +93,7 @@ function App() {
           className='Cell' 
           style={{backgroundColor: grid[i][j]? "blue" : undefined}}
           onMouseDown={()=>{
-            //copy the grid because its immutable 
+            //copy the grid because it's immutable 
             let gridCopy = gridInit(numRows,numCols);
             Object.assign(gridCopy, grid);
 
