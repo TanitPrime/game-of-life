@@ -61,6 +61,7 @@ function App() {
               gridCopy[i][j] = 1;
             }
           }
+          
         }
       }
       g = gridCopy;
@@ -73,7 +74,7 @@ function App() {
   return (
     <>
     <button onClick={()=>{
-      running? runSimulation() : setRunning(!running)
+      running? runSimulation() : setRunning(!running);
     }}>{running ? "stop": "start"}</button>
 
      <button onClick={()=>{
@@ -98,6 +99,7 @@ function App() {
             Object.assign(gridCopy, grid);
 
             grid[i][j] ? gridCopy[i][j] = 0 : gridCopy[i][j] = 1;
+            //if you enable this dont click the edge of the grid
             // console.log(`cell ${i}|${j} clicked has ${liveNeighbours(grid,i,j)} live neighbours`)
             setGrid(gridCopy);
 
