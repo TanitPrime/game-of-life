@@ -1,9 +1,6 @@
 import React, { useState, useCallback, useRef } from "react";
 import "./App.css";
 
-const numRows = 30;
-const numCols = 30;
-
 function gridInit(size) {
   console.log("initialized with size= "+size)
   const Rows = [];
@@ -29,12 +26,13 @@ function liveNeighbours(g, i, j) {
 }
 
 function App() {
+  const [size, setSize] = useState(30);
+  
   //grid state
   const [grid, setGrid] = useState(() => {
-    return gridInit(numRows, numCols);
+    return gridInit(size);
   });
 
-  const [size, setSize] = useState(30);
 
   //simulation state
   const [running, setRunning] = useState(false);
@@ -42,15 +40,17 @@ function App() {
   const runningRef = useRef(running);
   runningRef.current = running;
 
+  
+
   //simulation recursive function
   const runSimulation = useCallback(() => {
+    let gridCopy;
     //kill condition
-    console.log(runningRef.current);
     if (!runningRef.current) {
       return;
     }
     setGrid((g) => {
-      let gridCopy = gridInit(size);
+      gridCopy = gridInit(size);
       Object.assign(gridCopy, g);
 
       //cell life logic
@@ -77,9 +77,12 @@ function App() {
 
   return (
     <>
+    {/* @@@@@@@@@@@@@@@@@@@@@@@@@ controls @@@@@@@@@@@@@@@@@@@@@@@@ */}
       <h3 align="center">Click the grid to pick seed cells!</h3>
       <div className="controls">
         <label>set grid size</label>
+        {/* resizing the grid according to this slider */}
+        {/* // todo change this to work with useEffect */}
         <input
           type="range"
           min="5"
@@ -105,14 +108,17 @@ function App() {
         </button>
 
         <button
+          style={running ? {cursor: "not-allowed"} : {cursor:"pointer"} }
           onClick={() => {
-            setGrid(gridInit(size));
+            if(!running)
+              setGrid(gridInit(size));
           }}
         >
           Clear
         </button>
       </div>
 
+      {/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ grid @@@@@@@@@@@@@@@@@@@@@@@@@@@@ */}
       <div
         className="grid-wrap"
         style={{gridTemplateColumns: `repeat(${size},20px)`}}
